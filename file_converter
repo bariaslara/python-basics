@@ -1,0 +1,25 @@
+# Import the os module for interacting with the file system
+import os
+
+# Define the path to the directory where the files are located
+myPath = 'path'
+
+# Get a list of all files in the directory
+fileNameLists = os.listdir(myPath)
+
+# Loop through each file in the directory
+for fileName in fileNameLists:
+    # Check if the file has a .txt extension (case-insensitive)
+    if fileName.lower().endswith('.txt'):
+        # Print a message indicating the conversion from .txt to .csv
+        print('Converting "{}" to csv..'.format(fileName))
+        
+        # Create the full file path by joining the directory path and file name
+        fullFileName = os.path.join(myPath, fileName)
+        
+        # Generate the new file name by replacing the .txt extension with .csv
+        newFileName = fullFileName[0:len(fullFileName)-4] + '.csv'
+        
+        # Rename the file with the new .csv extension
+        os.rename(fileName, newFileName)
+
