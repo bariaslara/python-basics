@@ -1,0 +1,113 @@
+# Function to read the content of a file and return it as a string
+def readFile(path):
+    with open(path, 'r') as f:
+        return f.read()
+
+# Function to read and optionally modify the contact list in the file
+# 'var' determines whether to remove a specific contact ('False') or just sort and write ('True')
+def read_write(path, name, var='True'):
+    with open(path, "r+") as f:
+        # Read all lines and sort them
+        lines = sorted(f.readlines())
+        f.seek(0)  # Move the cursor to the beginning of the file
+        for line in lines:
+            # If removing a contact, write only lines that don't contain the name
+            if var == 'False':
+                if name not in line:
+                    f.write(line)
+            else:
+                # Otherwise, write all lines (for sorting)
+                f.write(line)
+        # Remove any extra content after the modified part (if file was larger before)
+        f.truncate()
+
+# Function to add a new contact to the contact list
+def add_contact(name):
+    # Check if the contact already exists
+    if name in curr_contacts:
+        print("Name already exists in current contact list.")
+    else: 
+        # Get phone number and email from user input
+        phone = input("Enter phone number: ")
+        email = input("Enter email address: ")
+        
+        # Append the new contact to the file
+        with open(path, "a") as f:
+            f.write(f"Name: {name}, Phone: {phone}, Email: {email}\n")
+        
+        print(name + " has been added to contact list.")
+    return 
+
+# Function to remove a contact from the contact list
+def remove_contact(name):
+    # Search for the contact before removing
+    search_contact(name)
+    # Use the read_write function to remove the contact from the file
+    read_write(path, name, 'False')
+    return print(name + " removed from contacts list.")
+
+# Function to search for a contact in the current list
+def search_contact(name):
+    if name in curr_contacts:
+        print(name + " found in contact list.")
+    else:
+        print(name + " does not exist in contact list.")
+
+# Function to update an existing contact by removing the old entry and adding a new one
+def update_contact(name):
+    # Remove the old contact
+    remove_contact(name)
+    # Get the new name and add the updated contact
+    new_name = input("Enter new name: ").lower()
+    add_contact(new_name)
+    
+# Function to sort the contact list alphabetically
+def sort_contact(path):
+    name = 'h'  # Placeholder name to keep the sorting consistent
+    read_write(path, name, 'True')  # Use read_write to sort the file
+    # Read and print the sorted contact list
+    contact_file = readFile(path)
+    return print(contact_file)
+
+# Define the path to the contact file
+path = "contacts.txt"
+
+# Read the current contact list from the file
+curr_contacts = readFile(path)
+
+# Prompt the user to select an action on the contact list
+user_input = input("Would you like to 'add', 'remove', 'search', 'view', 'update', or 'sort' the contact list? ").lower()
+
+# Loop until the user inputs 'done'
+while user_input != 'done':
+    # Add a new contact
+    if user_input == 'add':
+        name_input = input("Please enter name: ").lower()
+        add_contact(name_input)
+    # Remove an existing contact
+    elif user_input == 'remove':
+        name_input = input("Enter name of contact to remove: ").lower()
+        remove_contact(name_input)
+    # Search for a contact in the list
+    elif user_input == 'search':
+        name_input = input("Enter name to search: ").lower()
+        search_contact(name_input)
+    # View all contacts
+    elif user_input == 'view':
+        new_contacts = readFile(path)
+        print(new_contacts)
+    # Update an existing contact
+    elif user_input == 'update':
+        name_input = input("Please enter name of you wish to update: ").lower()
+        update_contact(name_input)
+    # Sort the contact list
+    elif user_input == 'sort':
+        sort_contact(path)
+
+    # Ask again if the user wants to perform another action
+    user_input = input("Would you like to 'add', 'remove', 'search', 'view', 'update', or 'sort' the contact list? If done type 'Done' ").lower()
+
+# Once done, read and print the final contact list
+contact_file = readFile(path)
+print("Here is current contact list: ")
+print(contact_file)
