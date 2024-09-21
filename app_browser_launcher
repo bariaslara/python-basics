@@ -1,0 +1,42 @@
+# python scrip to open an application and browser with 2 urls upon computer start up.
+# .bat file can be created and droped in startup folder 
+# Example of .bat file contents:
+# @echo off
+# "path to python.exe" "path to python_script.py"
+# exit
+
+# packages required
+import webbrowser
+import subprocess
+import time
+import logging
+
+# Set up logging to write to a file
+# Adjust path to your log_file.log
+logging.basicConfig(filename=r'...', level=logging.INFO, 
+                    format='%(asctime)s - %(levelname)s - %(message)s')
+
+# Launch an application on Windows
+# 
+try:
+    subprocess.Popen([r"....exe"])
+    logging.info("App launched successfully.")
+except Exception as e:
+    logging.error(f"Failed to open App: {e}")
+
+# URLs to open
+# Adjust Urls and add/delete as needed
+url_1 = "https://...com"
+url_2 = "https://...com"
+
+try:
+    webbrowser.open(url_1)
+    logging.info("Url_1 opened successfully.")
+
+    time.sleep(2)
+
+    webbrowser.open_new_tab(url_1)
+    logging.info("Url_2 opened successfully.")
+
+except Exception as e:
+    logging.error(f"Failed to open URLs: {e}")
